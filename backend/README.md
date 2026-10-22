@@ -25,17 +25,23 @@ A QR code only carries the server address. It does not make a local server reach
 
 By default, ResQNet detects the host's current local IPv4 address and uses port `8000`. The address can change when the computer changes Wi-Fi/hotspot, the network adapter changes, or the router assigns a different DHCP lease. The displayed URL is regenerated from the current address while the app runs; restart the app after changing networks.
 
-For a more stable local address, either:
+For a stable QR at a particular site, create a DHCP reservation for the coordinator computer in that site's router or hotspot settings. Then set `RESQNET_LAN_IP` to that reserved address when starting the backend. For example, if the router reserves `192.168.1.50` for the coordinator computer:
 
-- Create a DHCP reservation for the host computer in the router or hotspot settings, so it keeps the same local IP; or
-- Configure a local hostname that phones on that network can resolve, then start the backend with `RESQNET_PUBLIC_URL` set to its full URL. For example, macOS devices on the same network may resolve the host's Bonjour name such as `http://my-mac.local:8000`:
+```sh
+cd backend
+RESQNET_LAN_IP=192.168.1.50 python -m app.main
+```
+
+The QR will keep using that IP across restarts while the computer remains on that network. `RESQNET_LAN_IP` only controls the address ResQNet advertises; it does not assign the address or reserve it on the router. Without the DHCP reservation, the router may assign a different address or the configured QR may stop working. Use the router's reservation feature, and repeat this setup for each separate local network. Do not set `RESQNET_LAN_IP` on Render.
+
+As an alternative, configure a local hostname that phones on that network can resolve, then start the backend with `RESQNET_PUBLIC_URL` set to its full URL. For example, macOS devices on the same network may resolve the host's Bonjour name such as `http://my-mac.local:8000`:
 
   ```sh
   cd backend
   RESQNET_PUBLIC_URL=http://my-mac.local:8000 python -m app.main
   ```
 
-Use the actual hostname for the host computer. `.local` resolution depends on Bonjour/mDNS support on the network and phone, so test it from a phone before relying on it. A DHCP reservation is generally more reliable on a private router. Changing networks may still make a hostname or reserved address unavailable.
+Use the actual hostname for the host computer. `.local` resolution depends on Bonjour/mDNS support on the network and phone, so test it from a phone before relying on it. Changing networks may still make a hostname or reserved address unavailable.
 
 If the phone cannot connect, confirm both devices are on the same Wi-Fi/hotspot, the displayed URL uses the host's current address, and the host firewall allows incoming connections on port `8000`.
 
@@ -67,6 +73,6 @@ The `resqnet-data` Docker volume keeps incident data when the app container is r
 
 ## Deploy from GitHub without buying a domain
 
-The repository also includes a Render Blueprint (`render.yaml`). Render supplies a stable `onrender.com` address, so no custom domain is needed. Connect the GitHub repository to Render as a Blueprint; it will build the Dockerfile, prompt you for `RESQNET_PIN`, generate `RESQNET_SECRET`, and create a 1 GB disk mounted at `/data` for the SQLite database. The app reads Render's assigned public URL automatically for its QR code.
+The repository also includes a Render Blueprint (`render.yaml`). Render supplies a stable `onrender.com` address, so no custom domain is needed. Connect the GitHub repository to Render as a Blueprint; it builds the Dockerfile, prompts for `RESQNET_PIN`, and generates `RESQNET_SECRET`. The app reads Render's assigned public URL automatically for its QR code.
 
-This uses a paid always-on web service and a persistent disk. Render's free service sleeps after inactivity and loses local database files, so it is suitable for a demo but not for preserving incidents behind a permanently printed QR. See the repository's root README and [Render's current pricing](https://render.com/pricing) before deploying.
+The configured free service sleeps after inactivity and has temporary storage, so it is suitable for a demo but not for guaranteed 24/7 availability or permanent incident records. See the repository's root README for the current deployment behavior.

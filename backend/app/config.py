@@ -1,6 +1,7 @@
 import os
 import secrets
 import socket
+import ipaddress
 from urllib.parse import urlsplit, urlunsplit
 from pathlib import Path
 
@@ -10,6 +11,12 @@ FRONTEND_DIST = BASE_DIR.parent / "frontend" / "dist"
 
 HOST = "0.0.0.0"
 PORT = int(os.environ.get("PORT", "8000"))
+LAN_IP = os.environ.get("RESQNET_LAN_IP", "").strip()
+if LAN_IP:
+    try:
+        LAN_IP = str(ipaddress.IPv4Address(LAN_IP))
+    except ipaddress.AddressValueError as exc:
+        raise ValueError("RESQNET_LAN_IP must be a valid IPv4 address") from exc
 PUBLIC_URL = (
     os.environ.get("RESQNET_PUBLIC_URL", "").strip()
     or os.environ.get("RENDER_EXTERNAL_URL", "").strip()
@@ -51,6 +58,8 @@ SECRET = load_secret()
 
 
 def get_lan_ip() -> str:
+    if LAN_IP:
+        return LAN_IP
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         sock.connect(("10.255.255.255", 1))

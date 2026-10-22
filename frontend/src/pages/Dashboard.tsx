@@ -151,7 +151,7 @@ export default function Dashboard() {
             {accessUrl ?? "Loading connection address…"}
           </p>
           <p className="mt-2 text-xs leading-relaxed text-slate-500">
-            This is a local-network address. It can change when the host joins a different network or receives a new DHCP address.
+            Local install: reserve this computer’s IP in the router and set RESQNET_LAN_IP to keep this QR stable on that network. Hosted install: this QR uses the public URL and needs internet access.
           </p>
         </div>
       </section>
