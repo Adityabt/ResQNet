@@ -23,7 +23,7 @@ The form reviews the request before submission. After it is sent, the requester 
 
 Volunteers can join with their name, switch between on-duty and off-duty status, and review pending requests ordered by priority. Request cards show relevant details such as urgency, zone, waiting time, description, and requested supplies.
 
-A volunteer can take an available request and then update its progress as they respond. The active task remains visible until it is completed or returned to the queue. A volunteer who is off duty can still review the queue but cannot take a request; a volunteer with an active task must finish or release it before taking another.
+A volunteer can take an available request and then update its progress as they respond. Before setting off, a volunteer can release an assigned request back to the queue. Once a response is under way, the volunteer can mark it en route and resolve it. A volunteer who is off duty can still review the queue but cannot take a request, and a volunteer can have only one active task at a time.
 
 ### Coordinators
 
@@ -31,7 +31,7 @@ The coordinator workspace provides a broader view for managing an incident respo
 
 - **Board:** View open and critical request counts, available volunteers, connected clients, and requests grouped by zone. Selecting a zone filters the queue.
 - **Priority queue:** Review request details and priority scores, assign requests to volunteers, and manage their status.
-- **Automatic allocation:** Match high-priority pending requests with available volunteers when the required stock is available. Requests that cannot be allocated remain pending and are reported as skipped.
+- **Automatic allocation:** Process pending requests in priority order and assign them to available volunteers when the required stock is available. Requests that cannot be allocated remain pending and are reported as skipped.
 - **Supplies:** Review inventory and update stock levels.
 - **Announcements:** Publish notices marked as information, warning, or critical.
 - **Insights:** Review totals and charts for requests by type and urgency, resolved and cancelled requests, and average resolution time.
