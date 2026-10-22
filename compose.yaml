@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      RESQNET_PUBLIC_URL: https://${RESQNET_DOMAIN:?Set RESQNET_DOMAIN in .env}
+      RESQNET_DB_PATH: /data/resqnet.db
+      RESQNET_ALLOW_REMOTE_COORDINATOR: "true"
+      RESQNET_PIN: ${RESQNET_PIN:?Set a strong coordinator PIN in .env}
+      RESQNET_SECRET: ${RESQNET_SECRET:?Set a random secret in .env}
+    volumes:
+      - resqnet-data:/data
+    expose:
+      - "8000"
+
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      RESQNET_DOMAIN: ${RESQNET_DOMAIN:?Set RESQNET_DOMAIN in .env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+
+volumes:
+  resqnet-data:
+  caddy-data:
+  caddy-config:

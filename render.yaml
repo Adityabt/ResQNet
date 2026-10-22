@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: resqnet
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: RESQNET_DB_PATH
+        value: /tmp/resqnet.db
+      - key: RESQNET_ALLOW_REMOTE_COORDINATOR
+        value: "true"
+      - key: RESQNET_SECRET
+        generateValue: true
+      - key: RESQNET_PIN
+        sync: false
